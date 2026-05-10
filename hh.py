@@ -40,6 +40,11 @@ try:
         except NoSuchElementException:
             title = "Не указано"
 
+        # Зарплата извлекается через JS, а не через стандартные селекторы Selenium.
+        # Причина: верстка hh.ru нестабильна — классы у блока зарплаты генерируются
+        # динамически (например, "compensation-row--abc123"), и CSS/XPath-селекторы
+        # ломаются при каждом обновлении сайта. Проще один раз написать JS, который
+        # ищет элемент по содержимому (символ ₽), чем поддерживать хрупкие селекторы.
         js_get_salary = """
                 function getSalary() {
                     let el = document.querySelector('div[class^="compensation-row"]');
